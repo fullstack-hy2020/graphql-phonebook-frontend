@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { gql, useLazyQuery } from '@apollo/client'
+import { useState } from 'react'
+import { gql, useQuery } from '@apollo/client'
 
 const FIND_PERSON = gql`
   query findPersonByName($nameToSearch: String!) {
@@ -15,30 +15,32 @@ const FIND_PERSON = gql`
   }
 `
 
-const Persons = ({ persons }) => {
-  const [getPerson, result] = useLazyQuery(FIND_PERSON)
-  const [person, setPerson] = useState(null)
-
-  const showPerson = (name) => {
-    getPerson({ variables: { nameToSearch: name } })
-  }
-
-  useEffect(() => {
-    if (result.data) {
-      setPerson(result.data.findPerson)
-    }
-  }, [result.data])
-
-  if (person) {
-    return (
+const Person = ({ person, onClose }) => {
+  return (
+    <div>
+      <h2>{person.name}</h2>
       <div>
-        <h2>{person.name}</h2>
-        <div>
-          {person.address.street} {person.address.city}
-        </div>
-        <div>{person.phone}</div>
-        <button onClick={() => setPerson(null)}>close</button>
+        {person.address.street} {person.address.city}
       </div>
+      <div>{person.phone}</div>
+      <button onClick={onClose}>close</button>
+    </div>
+  )
+}
+
+const Persons = ({ persons }) => {
+  const [nameToSearch, setNameToSearch] = useState(null)
+  const result = useQuery(FIND_PERSON, {
+    variables: { nameToSearch },
+    skip: !nameToSearch,
+  })
+
+  if (nameToSearch && result.data) {
+    return (
+      <Person
+        person={result.data.findPerson}
+        onClose={() => setNameToSearch(null)}
+      />
     )
   }
 
@@ -48,7 +50,7 @@ const Persons = ({ persons }) => {
       {persons.map((p) => (
         <div key={p.name}>
           {p.name} {p.phone}
-          <button onClick={() => showPerson(p.name)}>show address</button>
+          <button onClick={() => setNameToSearch(p.name)}>show address</button>
         </div>
       ))}
     </div>
