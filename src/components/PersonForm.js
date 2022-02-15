@@ -4,10 +4,10 @@ import { useMutation } from '@apollo/client'
 import { ALL_PERSONS, CREATE_PERSON } from '../queries'
 
 const PersonForm = ({ setError }) => {
-  const [name, setName] = useState('assaas')
+  const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [street, setStreet] = useState('assaas')
-  const [city, setCity] = useState('assaas')
+  const [street, setStreet] = useState('')
+  const [city, setCity] = useState('')
 
   const [createPerson] = useMutation(CREATE_PERSON, {
     onError: (error) => {
