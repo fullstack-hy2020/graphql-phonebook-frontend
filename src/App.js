@@ -38,8 +38,8 @@ const App = () => {
   const client = useApolloClient()
 
   useSubscription(PERSON_ADDED, {
-    onSubscriptionData: ({ subscriptionData, client }) => {
-      const addedPerson = subscriptionData.data.personAdded
+    onData: ({ data, client }) => {
+      const addedPerson = data.data.personAdded
       notify(`${addedPerson.name} added`)
       updateCache(client.cache, { query: ALL_PERSONS }, addedPerson)
 
