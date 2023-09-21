@@ -1,21 +1,8 @@
 import { useState } from 'react'
-import { gql, useQuery } from '@apollo/client'
-
+import { useQuery } from '@apollo/client'
 import Person from './Person'
 
-const FIND_PERSON = gql`
-  query findPersonByName($nameToSearch: String!) {
-    findPerson(name: $nameToSearch) {
-      name
-      phone
-      id
-      address {
-        street
-        city
-      }
-    }
-  }
-`
+import { FIND_PERSON } from '../queries'
 
 const Persons = ({ persons }) => {
   const [nameToSearch, setNameToSearch] = useState(null)
